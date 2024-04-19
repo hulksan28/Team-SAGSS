@@ -30,7 +30,7 @@
     <form id="lockerBookingForm" action="/locker" method="post">
 	
 	  <label for="floor">Floor:</label>
-      <select id="floor" name="floor" required>
+      <select id="floor" name="lockerfloor" required>
 	  <option value="">-- Select a Floor --</option>
 	   {% for i in floor %}
 		<option value="{{ i[0] }}">{{ i[0] }}</option>
@@ -40,10 +40,10 @@
       </select>
 	  
       <label for="start-date">Start Date:</label>
-      <input type="date" id="start-date" name="start-date" required>
+      <input type="date" id="start-date" name="start_date" required>
 
       <label for="end-date">End Date:</label>
-      <input type="date" id="end-date" name="end-date" required>
+      <input type="date" id="end-date" name="end_date" required>
 
       <button type="submit">Book Locker</button>
     </form>
