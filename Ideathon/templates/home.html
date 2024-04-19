@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>test</h1>
+    <h1>{{ out_msg }}</h1>
+
+    <p><a href="/logout">logout</a></p>
+
+    <p><a href="/locker">Locker</a>
+    <a href="/foodvendor">Food Vendor</a></p>
+
+
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <!-- <th scope="col">#</th> -->
+                <th scope="col">Course Code</th>
+                <th scope="col">Couse Name</th>
+                <th scope="col">attendance</th>
+                <th scope="col">attendance</th>
+                <th scope="col">attendance</th>
+                <th scope="col">attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in myresult %}
+            <tr>
+                <!-- <td>{{ i[1] }}</td> -->
+                <td>{{ i[0] }}</td>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}</td>
+                <td>{{ i[3] }}</td>
+                <td>{{ i[4] }}</td>
+                <td>{{ i[5] }}</td>
+            </tr>
+            {% endfor %}
+            <!-- <tr>
+                <th scope="row">1</th>
+                <td>ITE1003</td>
+                <td>Artificial Intelligence</td>
+                <td> <a href="attendance.html">attendance</a> </td>
+            </tr> -->
+        </tbody>
+    </table>
+
+
+    
+    
+</body>
+</html>
