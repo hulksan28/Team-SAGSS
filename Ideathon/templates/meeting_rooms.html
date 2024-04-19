@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Rooms</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html">Bookings</a>
+        <ul>
+          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="lockers.html">Lockers</a></li>
+          <li><a href="recreation.html">Recreation</a></li>
+        </ul>
+      </li>
+      <li><a href="queries.html">Queries</a></li>
+      <li><a href="family.html">Family</a></li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <h1>Meeting Rooms</h1>
+    <p>Book a meeting room for your scheduled meetings.</p>
+
+    <form id="meetingRoomBookingForm" action="/meetings" method="post">
+      <label for="meeting-date">Meeting Date:</label>
+      <input type="date" id="meeting-date" name="meeting_date" required>
+
+      <label for="meeting-start-time">Meeting Start Time:</label>
+      <input type="time" id="meeting-start-time" name="meeting_start_time" required>
+
+      <label for="meeting-end-time">Meeting End Time:</label>
+      <input type="time" id="meeting-end-time" name="meeting_end_time" required>
+
+      <label for="meeting-room">Select a Meeting Room:</label>
+      <select id="meeting-room" name="meeting_room" required>
+        <option value="">-- Select a Room --</option>
+        <!-- <option value="room-1">Room 1</option> -->
+        <!-- <option value="room-2">Room 2</option> -->
+        <!-- <option value="room-3">Room 3</option> -->
+		{% for i in meetings %}
+		<option value="{{ i[0] }}">{{ i[0] }}</option>
+		{% endfor %}
+      </select>
+
+      <button type="submit">Book Meeting Room</button>
+    </form>
+  </div>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

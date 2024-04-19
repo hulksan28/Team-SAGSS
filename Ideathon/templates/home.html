@@ -1,56 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLR ODC Portal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>test</h1>
-    <h1>{{ out_msg }}</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="bookings.html">Bookings</a>
+        <ul>
+          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="lockers.html">Lockers</a></li>
+          <li><a href="recreation.html">Recreation</a></li>
+        </ul>
+      </li>
+      <li><a href="queries.html">Queries</a></li>
+      <li><a href="family.html">Family</a></li>
+	  <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
 
-    <p><a href="/logout">logout</a></p>
+  <div class="hero-section">
+	<div class="bg-image">
+		<img src="background.png" alt="Background Image">
+	</div>
+    <div class="hero-content">
+      <h1>Welcome to BLR ODC</h1>
+    </div>
+  </div>
+  
+  
 
-    <p><a href="/locker">Locker</a>
-    <a href="/foodvendor">Food Vendor</a></p>
-
-
-
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <!-- <th scope="col">#</th> -->
-                <th scope="col">Course Code</th>
-                <th scope="col">Couse Name</th>
-                <th scope="col">attendance</th>
-                <th scope="col">attendance</th>
-                <th scope="col">attendance</th>
-                <th scope="col">attendance</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for i in myresult %}
-            <tr>
-                <!-- <td>{{ i[1] }}</td> -->
-                <td>{{ i[0] }}</td>
-                <td>{{ i[1] }}</td>
-                <td>{{ i[2] }}</td>
-                <td>{{ i[3] }}</td>
-                <td>{{ i[4] }}</td>
-                <td>{{ i[5] }}</td>
-            </tr>
-            {% endfor %}
-            <!-- <tr>
-                <th scope="row">1</th>
-                <td>ITE1003</td>
-                <td>Artificial Intelligence</td>
-                <td> <a href="attendance.html">attendance</a> </td>
-            </tr> -->
-        </tbody>
-    </table>
-
-
-    
-    
+  <script src="script.js"></script>
 </body>
 </html>
