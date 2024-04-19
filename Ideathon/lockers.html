@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lockers</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html">Bookings</a>
+        <ul>
+          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="lockers.html">Lockers</a></li>
+          <li><a href="recreation.html">Recreation</a></li>
+        </ul>
+      </li>
+      <li><a href="queries.html">Queries</a></li>
+      <li><a href="family.html">Family</a></li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <h1>Lockers</h1>
+    <p>Book a locker for your personal belongings.</p>
+
+    <form id="lockerBookingForm" action="/locker" method="post">
+	
+	  <label for="floor">Floor:</label>
+      <select id="floor" name="floor" required>
+	  <option value="">-- Select a Floor --</option>
+	   {% for i in floor %}
+		<option value="{{ i[0] }}">{{ i[0] }}</option>
+	   {% endfor %}
+        <!-- <option value="floor-1">Ground Floor</option> -->
+        <!-- <option value="floor-2">First Floor</option> -->
+      </select>
+	  
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="start-date" required>
+
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="end-date" required>
+
+      <button type="submit">Book Locker</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

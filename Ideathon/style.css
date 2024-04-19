@@ -1,0 +1,347 @@
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #ddd;
+}
+/* Navigation */
+/* Navigation */
+nav {
+  background-color: #222;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+}
+
+nav ul li {
+  position: relative;
+  margin: 0 10px;
+}
+
+nav ul li a {
+  color: #ddd;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: #444;
+}
+
+nav ul li ul {
+  display: none;
+  position: absolute;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 2; /* Increased z-index value */
+  min-width: 200px;
+}
+
+nav ul li:hover > ul {
+  display: block;
+}
+
+nav ul li ul li {
+  margin: 5px 0;
+  white-space: nowrap;
+}
+
+nav ul li ul li a {
+  padding: 5px 10px;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('path/to/your/background-image.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5); /* Initial dimming effect */
+  transition: filter 0.5s ease; /* Smooth transition for brightness */
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ddd;
+}
+
+p {
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: #aaa;
+}
+
+form {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #ddd;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #666;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Family Section */
+.family-section {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.post {
+  background-color: #666;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.post-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.post-header h3 {
+  font-size: 1.2rem;
+  color: #ddd;
+}
+
+.post-content {
+  line-height: 1.5;
+  color: #aaa;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.post-actions button {
+  background-color: transparent;
+  border: none;
+  color: #ddd;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.post-actions button:hover {
+  color: #007bff;
+}
+
+/* Queries Section */
+.queries-section {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.query {
+  background-color: #666;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.query-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.query-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.query-header h3 {
+  font-size: 1.2rem;
+  color: #ddd;
+}
+
+.query-content {
+  line-height: 1.5;
+  color: #aaa;
+}
+
+.query-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.query-actions button {
+  background-color: transparent;
+  border: none;
+  color: #ddd;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.query-actions button:hover {
+  color: #007bff;
+}
+
+/* Locker Booking Form */
+#lockerBookingForm {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+#lockerBookingForm label {
+  display: block;
+  margin-bottom: 10px;
+  color: #ddd;
+}
+
+#lockerBookingForm input[type="date"],
+#lockerBookingForm select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #666;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+#lockerBookingForm button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#lockerBookingForm button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  background-color: #555;
+  color: #ddd;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.login-container {
+  background-color: #333;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  max-width: 400px;
+  width: 100%;
+}

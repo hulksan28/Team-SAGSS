@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recreation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html">Bookings</a>
+        <ul>
+          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="lockers.html">Lockers</a></li>
+          <li><a href="recreation.html">Recreation</a></li>
+        </ul>
+      </li>
+      <li><a href="queries.html">Queries</a></li>
+      <li><a href="family.html">Family</a></li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <h1>Recreation</h1>
+    <p>Book Table Tennis, Foosball, Carrom, or Chess in 15-minute slots starting from 5 PM.</p>
+
+    <form>
+      <label for="recreation-type">Select Activity:</label>
+      <select id="recreation-type" name="recreation-type">
+        <option value="">-- Select an Activity --</option>
+        <option value="table-tennis">Table Tennis</option>
+        <option value="foosball">Foosball</option>
+        <option value="carrom">Carrom</option>
+        <option value="chess">Chess</option>
+      </select>
+
+      <label for="recreation-date">Date:</label>
+      <input type="date" id="recreation-date" name="recreation-date" required>
+
+      <label for="recreation-time">Time Slot:</label>
+      <select id="recreation-time" name="recreation-time">
+        <option value="">-- Select a Time Slot --</option>
+        <option value="17:00">5:00 PM - 5:15 PM</option>
+        <option value="17:15">5:15 PM - 5:30 PM</option>
+        <option value="17:30">5:30 PM - 5:45 PM</option>
+        <option value="17:45">5:45 PM - 6:00 PM</option>
+        <!-- Add more time slots as needed -->
+      </select>
+
+      <button type="submit">Book Recreation</button>
+    </form>
+  </div>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
