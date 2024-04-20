@@ -463,3 +463,17 @@ button:hover {
 #foodOrderForm button[type="submit"]:hover {
   background-color: #0056b3;
 }
+
+
+
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+}
+th, td {
+  text-align: left;
+}
