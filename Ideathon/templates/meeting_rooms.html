@@ -22,12 +22,12 @@
       <li><a href="family.html">Family</a></li>
     </ul>
   </nav>
-
+  <p>{{ meetingroom_status }}</p>
   <div class="content">
     <h1>Meeting Rooms</h1>
     <p>Book a meeting room for your scheduled meetings.</p>
 
-    <form id="meetingRoomBookingForm" action="/meetings" method="post">
+    <form id="meetingRoomBookingForm" action="/meeting_room" method="post">
       <label for="meeting-date">Meeting Date:</label>
       <input type="date" id="meeting-date" name="meeting_date" required>
       
@@ -40,8 +40,8 @@
       <label for="meeting-floor">Select floor:</label>
       <select id="meeting-floor" name="meeting_floor" onchange="showRooms()" required>
         <option value="">-- Select a Floor --</option>
-        <option value="ff">FF</option>
-        <option value="gf">GF</option>
+        <option value="FF">FF</option>
+        <option value="GF">GF</option>
       </select>
       
       <label for="meeting-room">Select a Meeting Room:</label>
@@ -51,8 +51,8 @@
         <!-- <option value="room-2">Room 2</option> -->
         <!-- <option value="room-3">Room 3</option> -->
            {% for i in meetings %}
-        <option value="{{ i }}">{{ i }}</option>
-		      {% endfor %}
+        <option id="{{ i[1] }}" value="{{ i[0] }}">{{ i[0] }}</option>
+          {% endfor %}
       </select>
 
       <button type="submit">Book Meeting Room</button>
@@ -62,28 +62,24 @@
   <script>
     function showRooms() {
       var floor = document.getElementById("meeting-floor").value;
-      var meetingRoomSelect = document.getElementById("meeting-room");
+      
 
-      // Remove existing options
-      meetingRoomSelect.innerHTML = "<option value=''>-- Select a Room --</option>";
-
-      // Fetch meeting rooms data from server based on selected floor
-      fetch("/api/meeting_rooms?floor=" + floor)
-        .then(response => response.json())
-        .then(data => {
-          // Populate meeting rooms dropdown with fetched data
-          data.forEach(room => {
-            var option = document.createElement("option");
-            option.value = room.id;
-            option.text = room.name;
-            meetingRoomSelect.appendChild(option);
-          });
-        })
-        .catch(error => console.error('Error fetching meeting rooms:', error));
+      const selectElement = document.getElementById("meeting-room"); 
+      const optionsToHide = selectElement.querySelectorAll('option');
+      optionsToHide.forEach(option => {
+        if (option.id === floor) {
+          option.style.display = 'block';
+        } else {
+          option.style.display = 'none';
+        }
+      });
+      var rooms = document.getElementById("meeting-room");
     }
 
-    // Call the function initially to populate meeting rooms based on default selected floor
-    showRooms();
+
+
+
+
   </script>
 </body>
 </html>
