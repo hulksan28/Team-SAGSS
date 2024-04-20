@@ -71,7 +71,14 @@ def home():
 @app.route("/locker", methods = ['POST', 'GET'])
 def locker():
 	if request.method == 'GET':
+		if "user" not in session:
+			return redirect("/login")
+		
 		mycursor = mydb.cursor()
+		sql = "update `lockers` set user_id = null,from_date = null,to_date = null where to_date < curdate() - interval 1 day"
+		mycursor.execute(sql)
+		mydb.commit()
+		
 		sql = "SELECT distinct floor FROM `lockers` where user_id is null"
 		mycursor.execute(sql)
 		myresult = mycursor.fetchall()
@@ -105,11 +112,7 @@ def food():
 			sql = "SELECT U.name,FM.foodlist FROM `food_mapping` FM inner join `users` U on FM.user_id = U.user_id"
 			mycursor.execute(sql)
 			food_menu = mycursor.fetchall()
-			print("====================================")
-			arr = []
-			arr2 = []
-			arr4 = []
-			arr5 = []
+			arr,arr2,arr3,arr4,arr5 = [],[],[],[],[]
 			for i in food_menu:
 				name = i[0]
 				name2 = json.loads(i[1].replace("'", '"'))
@@ -127,7 +130,6 @@ def food():
 						arr2.append(key)
 						arr4.append(name)
 			arr2 = list(set(arr2))
-			arr3 = []
 			for i in arr2:
 				count = 0
 				for j in arr:
