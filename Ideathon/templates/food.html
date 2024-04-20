@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html">Bookings</a>
+        <ul>
+          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="lockers.html">Lockers</a></li>
+          <li><a href="recreation.html">Recreation</a></li>
+        </ul>
+      </li>
+      <li><a href="queries.html">Queries</a></li>
+      <li><a href="family.html">Family</a></li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <h1>Food</h1>
+    <p>Book your lunch by 10 AM every morning (2 hours prior to lunch break).</p>
+
+    <form id="foodOrderForm" action="/food" method="post">
+      <div class="food-items">
+        {% for i in food_menu %}
+        <div class="food-item">
+            <label for="item1">{{ i[2] }}</label>
+            <input type="number" id="item1" name="{{ i[0] }}" value="0" min="0" max="5">
+            <span class="item-price">{{ i[4] }}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="total-amount">
+        <label for="total">Total:</label>
+        <input type="text" id="total" name="total" value="0" readonly>
+      </div>
+
+      <button type="submit">Place Order</button>
+    </form>
+  </div>
+
+  <script>
+
+    function calculateTotalAmount() {
+        console.log('hi');
+        const foodItems = document.querySelectorAll('.food-item');
+        let totalAmount = 0;
+      
+        foodItems.forEach(item => {
+          const itemName = item.querySelector('label').textContent;
+          const itemPrice = parseFloat(item.querySelector('.item-price').textContent.replace('₹', ''));
+          const itemQuantity = parseInt(item.querySelector('input[type="number"]').value);
+      
+          if (itemQuantity > 0) {
+            const itemTotal = itemPrice * itemQuantity;
+            totalAmount += itemTotal;
+            console.log(`${itemName}: ${itemQuantity} x ₹${itemPrice} = ₹${itemTotal}`);
+          }
+        });
+      
+        document.getElementById('total').value = totalAmount.toFixed(2);
+      }
+
+      document.querySelectorAll('.food-item input[type="number"]').forEach(input => {
+        input.addEventListener('input', calculateTotalAmount);
+      });
+
+
+  </script>
+</body>
+</html>

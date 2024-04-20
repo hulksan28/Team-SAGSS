@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BLR ODC Portal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   <nav>
     <ul>
-      <li><a href="index.html">Home</a></li>
+      <li><a href="/home">Home</a></li>
       <li><a href="bookings.html">Bookings</a>
         <ul>
-          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
-          <li><a href="food.html">Food</a></li>
-          <li><a href="lockers.html">Lockers</a></li>
+          <li><a href="meeting-rooms">Meeting Rooms</a></li>
+          <li><a href="/food">Food</a></li>
+          <li><a href="/locker">Lockers</a></li>
           <li><a href="recreation.html">Recreation</a></li>
         </ul>
       </li>
