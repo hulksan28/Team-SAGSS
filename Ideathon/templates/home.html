@@ -13,8 +13,8 @@
 <body>
   <nav>
     <ul>
-      <li><a href="/home"><i class="fa-solid fa-house"></i> Home</a></li>
-      <li><i class="fa-solid fa-wifi"></i> <p>Bookings</p>
+      <li><a href="/home"><i class="fa-solid fa-house" style="color:green;"></i> Home</a></li>
+      <li><i class="fa-solid fa-wifi" style="color:blue;"></i> <p style="display:inline-block;">Bookings</p>
         <ul>
           <li><a href="/meeting_room"><i class="fa-brands fa-meetup"></i> Meeting Rooms</a></li>
           <li><a href="/food"><i class="fa-solid fa-bowl-food"></i> Food</a></li>
@@ -22,30 +22,31 @@
           <li><a href="/recreation"><i class="fa-solid fa-dice"></i> Recreation</a></li>
         </ul>
       </li>
-      <li><a href="/queries"><i class="fa-brands fa-quora"></i> Queries</a></li>
-      <li><a href="family.html"><i class="fa-solid fa-people-group"></i> Family</a></li>
-      <li><a href="/attendance"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
-      <li><a href="/centralrepo"><i class="fa-solid fa-book-open-reader"></i> Central Repo</a></li>
+      <li><a href="/queries"><i class="fa-brands fa-quora" style="color:red;"></i>ueries</a></li>
+      <li><a href="family.html"><i class="fa-solid fa-people-group" style="color:blue;"></i> Family</a></li>
+      <li><a href="/attendance"><i class="fa-solid fa-clipboard-user" style="color:green;"></i> Attendance</a></li>
+      <li><a href="/centralrepo"><i class="fa-solid fa-book-open-reader" style="color:violet"></i> Central Repo</a></li>
 	  <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
     </ul>
   </nav>
-
-  <div class="hero-section">
+  <br>
+  <h1 style="text-align: center;">Welcome to BLR ODC</h1>
+    <div class="hero-section">
 	<div class="bg-image">
     <img src="{{url_for('static', filename='background.jpg')}}" align="middle" />
 	</div>
     <div class="hero-content">
-      <h1>Welcome to BLR ODC</h1>
+    
     </div>
   </div>
-  <div class="container mt-3">
+  <div class="container mt-3" style="top:20%; left: 5%;">
     <h1>Active lockers</h1>
     <table class="table table-dark table-striped">
       <tr>
-        <td>Locker No</td>
-        <td>FLOOR</td>
-        <td>from date</td>
-        <td>to date</td>
+        <th>Locker No</th>
+        <th>FLOOR</th>
+        <th>from date</th>
+        <th>to date</th>
       </tr>
       {% for i in myresult %}
       <tr>
@@ -59,14 +60,14 @@
     </table>
   </div>
 
-  <div class="container mt-3">
+  <div class="container mt-3" style="top:35%; left: 5%;">
     <h1>Booked Meetings</h1>
     <table class="table table-dark table-striped">
       <tr>
-        <td>Meeting Room No</td>
-        <td>FLOOR</td>
-        <td>Start time</td>
-        <td>end time</td>
+        <th>Meeting Room No</th>
+        <th>FLOOR</th>
+        <th>Start time</th>
+        <th>end time</th>
       </tr>
       {% for i in myresult2 %}
       <tr>
@@ -80,12 +81,12 @@
     </table>
   </div>
 
-  <div class="container mt-3">
+  <div class="container mt-3" style="top:50%; left: 5%;">
     <h1>Booked FOOD</h1>
     <table class="table table-dark table-striped">
       <tr>
-        <td>Food Item</td>
-        <td>Quantity</td>
+        <th>Food Item</th>
+        <th>Quantity</th>
       </tr>
       {% for i in myresult3 %}
       <tr>
@@ -96,7 +97,6 @@
 
     </table>
   </div>
-  
   
 
   <script src="script.js"></script>

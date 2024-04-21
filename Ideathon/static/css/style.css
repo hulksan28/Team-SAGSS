@@ -30,7 +30,7 @@ nav ul {
 
 nav ul li {
   position: relative;
-  margin: 0 10px;
+  margin: 0 10px;	
 }
 
 nav ul li a {
@@ -101,13 +101,15 @@ nav ul li ul li a {
 
 .hero-content {
   position: absolute;
-  top: 50%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
   text-align: center;
   color: #fff;
 }
+
+
 
 .content {
   position: relative;
@@ -239,6 +241,7 @@ button[type="submit"]:hover {
 }
 
 .query-header {
+  font-style: bold;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -358,6 +361,14 @@ button:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   max-width: 400px;
   width: 100%;
+  margin: 0 auto; /* This will center the container horizontally */
+}
+
+.page-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100vh; /* Take up the full height of the viewport */
 }
 
 /* Meeting Room Booking Form */
@@ -484,7 +495,6 @@ table, th, td {
 }
 th, td {
   padding: 5px;
-}
-th, td {
+  width: 10%;
   text-align: left;
 }

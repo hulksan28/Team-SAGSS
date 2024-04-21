@@ -16,7 +16,7 @@ mydb = mysql.connector.connect(
 	host = "localhost",
 	user = "root",
 	password = "",
-	port = 3307,
+	port = 3306,
 	database = "sagss"
 )
 v_msg = ''
@@ -342,7 +342,7 @@ def recreation():
 			sportbooking_status = f"Already booking for today. Please come again tomorrow."
 			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
 		
-		if not is_time_slot_available(start_time, end_time):
+		if not is_time_slot_available_recreation(start_time, end_time):
 			sportbooking_status = "This slot is already booked for the requested time. Please choose another time."
 			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
 
@@ -355,7 +355,7 @@ def recreation():
 		return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
 
 # Function to check if the requested time slot is available for the given slot
-def is_time_slot_available(start_time, end_time):
+def is_time_slot_available_recreation   (start_time, end_time):
 	mycursor = mydb.cursor()
 	sql = "SELECT start_time, end_time FROM `sports_mapping`"
 	mycursor.execute(sql)
