@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, redirect, request, session,Response,send_file,url_for
+from flask import Flask, render_template, redirect, request, session
 import flask
 import mysql.connector
 import json
@@ -505,6 +505,41 @@ def queries():
 		mycursor.execute(sql,val)
 		mydb.commit()
 		return redirect("/queries")
+
+# =============================Central repository============================================================================================
+from flask import request
+from werkzeug.utils import secure_filename
+import os
+
+@app.route("/centralrepo", methods = ['POST', 'GET'])
+def centralrepo():
+	if request.method == 'GET':
+		if "user" not in session:
+			return redirect("/login")
+		sql = "SELECT * FROM `files`"
+		mycursor = mydb.cursor()
+		mycursor.execute(sql)
+		myresult = mycursor.fetchall()
+		return render_template("centralrepo.html", files = myresult, role = session.get('role'))
+		
+	if request.method == 'POST':
+		title = request.form['title']
+		if 'file' not in request.files:
+			msg =  'No file part in the request'
+		file = request.files['file']
+		if file.filename == '':
+			msg =  'No file selected for uploading'
+		if file:
+			filename = secure_filename(file.filename)
+			filepath = os.path.join('static/files/', filename)
+			file.save(filepath)
+			msg =  'File successfully uploaded'
+		sql = "Insert into `files` (user_id,file_name,file_path,date) values (%s,%s,%s,current_timestamp)"
+		val = (session.get('user'),title,filepath)
+		mycursor = mydb.cursor()
+		mycursor.execute(sql,val)
+		mydb.commit()
+		return render_template("centralrepo.html",msg = msg, role = session.get('role'))
 
 
 # =============================logout============================================================================================
