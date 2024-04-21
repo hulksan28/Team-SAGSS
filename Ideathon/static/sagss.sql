@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2024 at 02:12 PM
+-- Generation Time: Apr 21, 2024 at 04:37 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.2
 
@@ -43,6 +43,26 @@ INSERT INTO `attendance` (`user_id`, `login_time`) VALUES
 (4, '2024-04-21 17:09:56'),
 (4, '2024-04-20 12:09:53'),
 (2, '2024-04-21 17:37:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `files`
+--
+
+CREATE TABLE `files` (
+  `user_id` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` text NOT NULL,
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `files`
+--
+
+INSERT INTO `files` (`user_id`, `file_name`, `file_path`, `date`) VALUES
+(2, 'testfile123', 'static/files/110020701736.csv', '2024-04-21');
 
 -- --------------------------------------------------------
 
