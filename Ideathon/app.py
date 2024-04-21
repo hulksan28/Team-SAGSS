@@ -3,20 +3,14 @@ import flask
 import mysql.connector
 import json
 
-
 app = Flask(__name__)
 app.secret_key = "sasank"
-
-
-UPLOAD_FOLDER = 'static/uploads/'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 mydb = mysql.connector.connect(
 	host = "localhost",
 	user = "root",
 	password = "",
-	port = 3306,
+	port = 3307,
 	database = "sagss"
 )
 v_msg = ''
@@ -355,7 +349,7 @@ def recreation():
 		return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
 
 # Function to check if the requested time slot is available for the given slot
-def is_time_slot_available_recreation   (start_time, end_time):
+def is_time_slot_available_recreation(start_time, end_time):
 	mycursor = mydb.cursor()
 	sql = "SELECT start_time, end_time FROM `sports_mapping`"
 	mycursor.execute(sql)
@@ -377,7 +371,7 @@ def is_already_booked(user_id):
 	return True
 
 
-# =============================queries============================================================================================
+# =============================attendance============================================================================================
 def attendence_data(user_id):
 	mycursor = mydb.cursor()
 	sql = "SELECT login_time FROM `attendance` where user_id = %s"
@@ -542,21 +536,39 @@ def centralrepo():
 		return render_template("centralrepo.html",msg = msg, role = session.get('role'))
 
 
+# =============================Chatbot============================================================================================
+from openai import OpenAI
+from dotenv import load_dotenv
+load_dotenv()
+
+@app.route("/chatbot", methods = ['POST', 'GET'])
+def chatbot():
+	if request.method == 'GET':
+		if "user" not in session:
+			return redirect("/login")
+		return render_template("chatbot.html")
+	
+	if request.method == 'POST':
+		message = request.form['question'] + " explain in formal way."
+
+		client = OpenAI(api_key = os.getenv('OPENAI_API_KEY'))
+
+		response = client.chat.completions.create(
+		model="gpt-3.5-turbo",
+		messages=[
+			{"role": "system", "content": "You are a high level Bajaj advisor, skilled in explaining all funtional understanding with creative flair."},
+			{"role": "user", "content": message}
+		]
+		)
+
+		print(response.choices[0])
+		return render_template('chatbot.html', response=response.choices[0].message.content.strip())
+
 # =============================logout============================================================================================
 @app.route("/logout")
 def logout():
 	session.clear()
 	return redirect("/")
-
-# @app.route('/data')
-# def get_data():
-#     data = [
-#         {"id": 1, "name": "John", "age": 30},
-#         {"id": 2, "name": "Alice", "age": 25},
-#         {"id": 3, "name": "Bob", "age": 35}
-#     ]
-#     return jsonify(data)
-
 
 if __name__ == '__main__':
 	app.run(debug=True,port=7890)

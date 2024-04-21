@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #ddd;
+}
+
+/* Navigation */
+/* Navigation */
+nav {
+    background-color: #222;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav ul li {
+    position: relative;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #444;
+}
+
+nav ul li ul {
+    display: none;
+    position: absolute;
+    background-color: #222;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    /* Increased z-index value */
+    min-width: 200px;
+}
+
+nav ul li:hover>ul {
+    display: block;
+}
+
+nav ul li ul li {
+    margin: 5px 0;
+    white-space: nowrap;
+}
+
+nav ul li ul li a {
+    padding: 5px 10px;
+}
+
+
+
+
+#querydiv h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#querydiv p {
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#querydiv input[type="text"] {
+    width: 500px;
+    padding: 10px;
+    margin: 10px 10px;
+    border-radius: 5px;
+    border: 1px solid #222;
+    background-color: rgba(255, 255, 255, 0.103);
+    color: #ddd;
+}
+
+#querydiv input[type="submit"] {
+    left: 100px;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #222;
+    background-color: #222;
+    color: #ddd;
+    cursor: pointer;
+}
+
+#querydiv input[type="submit"]:hover {
+    background-color: #fff;
+    color: #121212;
+    transition: background-color 0.3s ease;
+}
+
+#heading {
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 20px 0;
+    border-bottom: #fff solid 1px;
+    display: inline-block;
+    margin-left: 70px;
+}
+
+
+#query {
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+
+
+
+#glassomorphism {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(10, 10, 19, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px 10px 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding-top: 20px;
+    border-bottom: 0 solid #fff;
+}
+
+#glassomorphism button{
+    border-radius: 50%;
+    position: relative;
+    left: 98%;
+    z-index: 10;
+    transform: translate(-50%, 50%);
+    background-color: #fff;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.glassomorphism {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(10, 10, 19, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 0 0 10px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 20px 12px;
+    border-top: 0 solid #fff;
+    z-index: -1;
+}
