@@ -38,13 +38,14 @@ def login():
 			session['name'] = 'FOOD_VENDOR'
 			return redirect("/food")
 		mycursor = mydb.cursor()
-		sql = "SELECT user_id,name FROM users WHERE adid = %s AND password = %s"
+		sql = "SELECT user_id,name,role FROM users WHERE adid = %s AND password = %s"
 		val = (values["adid"], values["password"])
 		mycursor.execute(sql, val)
 		result = mycursor.fetchone()
 		if result:
 			session['user'] = result[0]
 			session['name'] = result[1]
+			session['role'] = result[2]
 			return redirect("/home")
 		else:
 			v_msg = "invalid credentials"
@@ -243,7 +244,6 @@ def meeting_room():
 		start_time = datetime.combine(datetime.strptime(date, '%Y-%m-%d'), start_time.time())
 		end_time = datetime.strptime(end_time_str, '%H:%M')
 		end_time = datetime.combine(datetime.strptime(date, '%Y-%m-%d'), end_time.time())
-		# print(floor,room,date,start_time,end_time)
 
 		# Check if booking is for a past date or too far in the future
 		if start_time < datetime.now():
@@ -278,7 +278,6 @@ def meeting_room():
 
 		
 		# If room is available, book the time slot
-		# booked_rooms[floor][room].append((start_time, end_time))
 		mycursor = mydb.cursor()
 		sql = "Insert into `meetings` (floor,meeting_room,date,start_time,end_time,user_id) values (%s,%s,%s,%s,%s,%s)"
 		val = (floor,room,date,start_time,end_time,session.get('user'))
@@ -298,10 +297,6 @@ def is_time_slot_available(floor, room, start_time, end_time):
 		if (start_time <= booked_end and end_time >= booked_start) or (start_time == booked_end or end_time == booked_start) or (start_time == booked_end and end_time == booked_start):
 			return False
 	return True
-    # for booked_start, booked_end in booked_rooms[floor][room]:
-    #     if (start_time <= booked_end and end_time >= booked_start) or (start_time == booked_end or end_time == booked_start) or (start_time == booked_end and end_time == booked_start):
-    #         return False
-    # return True
 
 # Function to check if the selected time range is valid (start time before end time)
 def is_valid_time_range(start_time, end_time):
@@ -316,6 +311,201 @@ def is_within_max_duration(start_time, end_time):
 def is_practical_duration(start_time, end_time):
     duration = end_time - start_time
     return duration >= timedelta(minutes=MIN_BOOKING_DURATION_MINUTES)
+
+# =============================recreation============================================================================================
+@app.route('/recreation', methods=['POST','GET'])
+def recreation():
+	global sportbooking_status
+	mycursor = mydb.cursor()
+	sql = "SELECT * FROM `sports`"
+	mycursor.execute(sql)
+	myresult = mycursor.fetchall()
+	if request.method == 'GET':
+		return render_template("recreation.html", sports = myresult)
+	if request.method == 'POST':
+		print(request.form.to_dict())
+		start_time_str = request.form['sport_start_time']
+		sport = request.form['sport']
+		slot = int(request.form['slot'])
+		date = datetime.now().date()
+	
+		# Convert string inputs to datetime objects
+		start_time = datetime.strptime(start_time_str, '%H:%M')
+		start_time = datetime.combine(date, start_time.time())
+		end_time = start_time + timedelta(minutes=slot)
+ 
+		if start_time < datetime.now():
+			sportbooking_status =  "Cannot book for past time."
+			return render_template("recreation.html", sports = myresult, sportbooking_status=sportbooking_status)
+				
+		if not is_already_booked(session.get('user')):
+			sportbooking_status = f"Already booking for today. Please come again tomorrow."
+			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
+		
+		if not is_time_slot_available(start_time, end_time):
+			sportbooking_status = "This slot is already booked for the requested time. Please choose another time."
+			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
+
+		mycursor = mydb.cursor()
+		sql = "Insert into `sports_mapping` (sport,slot,date,start_time,end_time,user_id) values (%s,%s,%s,%s,%s,%s)"
+		val = (sport,slot,date,start_time,end_time,session.get('user'))
+		mycursor.execute(sql,val)
+		mydb.commit()
+		sportbooking_status = "Sport slot booked successfully."
+		return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
+
+# Function to check if the requested time slot is available for the given slot
+def is_time_slot_available(start_time, end_time):
+	mycursor = mydb.cursor()
+	sql = "SELECT start_time, end_time FROM `sports_mapping`"
+	mycursor.execute(sql)
+	myresult = mycursor.fetchall()
+	for booked_start, booked_end in myresult:
+		if (start_time <= booked_end and end_time >= booked_start) or (start_time == booked_end or end_time == booked_start) or (start_time == booked_end and end_time == booked_start):
+			return False
+	return True
+
+# Function to check if the user has already booked a slot for the day
+def is_already_booked(user_id):
+	mycursor = mydb.cursor()
+	sql = "SELECT start_time, end_time FROM `sports_mapping` where user_id = %s"
+	val = (user_id,)
+	mycursor.execute(sql,val)
+	myresult = mycursor.fetchall()
+	if myresult:
+		return False
+	return True
+
+
+# =============================queries============================================================================================
+def attendence_data(user_id):
+	mycursor = mydb.cursor()
+	sql = "SELECT login_time FROM `attendance` where user_id = %s"
+	val = (user_id,)
+	mycursor.execute(sql,val)
+	myresult = mycursor.fetchall()
+	arr1,arr2 = [],[]
+	for i in myresult:
+		arr1.append(i[0].strftime("%Y-%m-%d"))
+		arr2.append(int(i[0].strftime("%H")) + float(i[0].strftime("%M"))/100)
+	return (arr1,arr2)
+
+
+def get_attendence_data():
+	if session.get('role') == 'manager':
+		mycursor = mydb.cursor()
+		sql = "SELECT adid FROM `users` where user_id = %s union SELECT adid FROM `users` where manager_id = %s"
+		val = (session.get('user'),session.get('user'),)
+		mycursor.execute(sql,val)
+		userids = mycursor.fetchall()
+		userids = [i[0] for i in userids]
+		arr1,arr2 = attendence_data(session.get('user'))
+	else:
+		mycursor = mydb.cursor()
+		sql = "SELECT adid FROM `users` where user_id = %s"
+		val = (session.get('user'),)
+		mycursor.execute(sql,val)
+		userids = mycursor.fetchall()
+		userids = [i[0] for i in userids]
+		arr1,arr2 = attendence_data(session.get('user'))
+	return (arr1,arr2,userids)
+
+def post_attendence_data(user_name):
+	mycursor = mydb.cursor()
+	sql = "SELECT user_id,role FROM `users` where adid = %s"
+	val = (user_name,)
+	mycursor.execute(sql,val)
+	user_id = mycursor.fetchone()[0]
+	print("user_id==============")
+	print(user_id)
+	arr1,arr2 = attendence_data(user_id)
+	print("arr1==============")
+	print(arr1)
+	print("arr2==============")
+	print(arr2)
+
+
+	if session.get('role') == 'manager':
+		mycursor = mydb.cursor()
+		sql = "SELECT adid FROM `users` where user_id = %s union SELECT adid FROM `users` where manager_id = %s"
+		val = (session.get('user'),session.get('user'),)
+		mycursor.execute(sql,val)
+		userids = mycursor.fetchall()
+		userids = [i[0] for i in userids]
+	else:
+		userids = [session.get('user')]
+	return (arr1,arr2,userids)
+
+@app.route("/attendance", methods = ['POST', 'GET'])
+def attendance():
+	if "user" not in session:
+		return redirect("/login")
+	if request.method == 'GET':
+		arr1,arr2,userids = get_attendence_data()
+		print(arr1,arr2,userids)
+		return render_template("attendance.html",msg = "",arr1 = arr1,arr2 = arr2,userids = userids)
+	if request.method == 'POST':
+		values = request.form.to_dict()
+		print("=============")
+		print(values)
+		if 'mark_attendence' in values.keys():
+			mycursor = mydb.cursor()
+			sql = "SELECT * FROM `attendance` where user_id = %s and date(login_time) = curdate()"
+			val = (session.get('user'),)
+			mycursor.execute(sql,val)
+			myresult = mycursor.fetchall()
+			if myresult:
+				arr1,arr2,userids = get_attendence_data()
+				return render_template("attendance.html",msg = "Already marked",arr1 = arr1,arr2 = arr2,userids = userids)
+			sql = "Insert into `attendance` (user_id,login_time) values (%s,current_timestamp)"
+			val = (session.get('user'),)
+			mycursor.execute(sql,val)
+			mydb.commit()
+			arr1,arr2,userids = get_attendence_data()
+			return render_template("attendance.html",msg = "Marked successfully",arr1 = arr1,arr2 = arr2,userids = userids)
+		user_name = values['user_name']
+		arr1,arr2,userids = post_attendence_data(user_name)
+		return render_template("attendance.html",msg = "",arr1 = arr1,arr2 = arr2,userids = userids,user_name = user_name)
+
+# =============================queries============================================================================================
+@app.route("/queries", methods = ['POST', 'GET'])
+def queries():
+	if request.method == 'GET':
+		if "user" not in session:
+			return redirect("/login")
+		mycursor = mydb.cursor()
+		
+		queries = "select id,(select adid from `users` u where u.user_id = q.user_id),query,date from `queries` q order by date desc"
+		mycursor.execute(queries)
+		queries = mycursor.fetchall()
+		query_replies = ''
+
+		query_replies = "select query_id,reply,(select adid from `users` u where u.user_id = q.user_id) from `query_replies` q order by date desc"
+		mycursor.execute(query_replies)
+		query_replies = mycursor.fetchall()
+
+		# sql = "SELECT id,(select adid from `users` u where u.user_id = q.user_id),query,date FROM `queries` q order by date desc"
+		# mycursor.execute(sql)
+		# myresult = mycursor.fetchall()
+		return render_template("queries.html",queries = queries,query_replies = query_replies,user_id = session.get('user'))
+	
+	if request.method == 'POST':
+		values = request.form.to_dict()
+		if 'query_id' in values.keys():
+			mycursor = mydb.cursor()
+			sql = "insert into `query_replies` (query_id,reply,date,user_id) values (%s,%s,current_timestamp,%s)"
+			val = (values['query_id'],values['reply'],session.get('user'),)
+			mycursor.execute(sql,val)
+			mydb.commit()
+			return redirect("/queries")
+		
+		mycursor = mydb.cursor()
+		sql = "Insert into `queries` (user_id,query,date) values (%s,%s,current_timestamp)"
+		val = (session.get('user'),values['query'],)
+		mycursor.execute(sql,val)
+		mydb.commit()
+		return redirect("/queries")
+
 
 # =============================logout============================================================================================
 @app.route("/logout")

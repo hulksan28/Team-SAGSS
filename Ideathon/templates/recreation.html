@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recreation</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html">Bookings</a>
+        <ul>
+          <li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="/lockers">Lockers</a></li>
+          <li><a href="/recreation">Recreation</a></li>
+        </ul>
+      </li>
+      <li><a href="queries.html">Queries</a></li>
+      <li><a href="family.html">Family</a></li>
+    </ul>
+  </nav>
+  <p>{{ sportbooking_status }}</p>
+  <div class="content">
+    <h1>Recreation</h1>
+    <p>Book a sport for your play timings(after 4 pm).</p>
+
+    <form id="meetingRoomBookingForm" action="/recreation" method="post">      
+      <label for="sport-start-time">Start Time:</label>
+      <input type="time" id="sport-start-time" name="sport_start_time" required min="16:00">
+      
+      <label for="meeting-end-time">Slot:</label>
+      <select id="meeting-room" name="slot" required>
+        <option value="">-- Select a slot --</option>
+        <option value="15">15 min</option>
+        <option value="30">30 min</option>
+      </select>
+      
+      <label for="meeting-room">Sport:</label>
+      <select id="meeting-room" name="sport" required>
+        <option value="">-- Select a sport --</option>
+        {% for i in sports %}
+        <option id="{{ i[0] }}" value="{{ i[1] }}">{{ i[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <button type="submit">Book Meeting Room</button>
+    </form>
+  </div>
+
+  </body>
+</html>

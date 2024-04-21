@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Attendance.</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+	<nav>
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="index.html">Bookings</a>
+				<ul>
+					<li><a href="meeting-rooms.html">Meeting Rooms</a></li>
+					<li><a href="food.html">Food</a></li>
+					<li><a href="/lockers">Lockers</a></li>
+					<li><a href="/recreation">Recreation</a></li>
+				</ul>
+			</li>
+			<li><a href="queries.html">Queries</a></li>
+			<li><a href="family.html">Family</a></li>
+		</ul>
+	</nav>
+	<p>{{ msg }}</p>
+	<div class="content">
+		<h1>Attendance</h1>
+		<p>Mark your attandence here.</p>
+		<p id="dates" style="display:none;">{{ arr1 }}</p>
+		<p id="datevalues" style="display: none;">{{ arr2 }}</p>
+
+		<form id="meetingRoomBookingForm" action="/attendance" method="post">
+			<input type="text" name = "mark_attendence" style="display: none;">
+			<button type="submit">Mark my attendance</button>
+		</form>
+	</div>
+
+	<div>
+		<form action="/attendance" method="post">
+			<select name="user_name" id="name" onchange="handleChange()">
+				{% for user in userids %}
+					{% if user == user_name %}
+						<option value="{{ user }}" selected>{{ user }}</option>
+					{% else %}
+						<option value="{{ user }}">{{ user }}</option>
+					{% endif %}
+				{% endfor %}
+			</select>
+			<button type="submit" style="display: none;" id = "changeuser">Mark</button>
+		</form>
+	</div>
+
+	<script>
+		function handleChange() {
+			document.getElementById('changeuser').click();
+		}
+	</script>
+
+
+	<div class="content" style="width: 170vw;height:80vh;">
+		<h1>Attendance</h1>
+		<canvas id="myChart" width="290" height="100"></canvas>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+		var dates = document.getElementById('dates').textContent;
+		dates = dates.replace(/'/g, '"');
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				// labels: ['2024-04-21', '2024-04-20', '2024-04-19'],
+				labels: JSON.parse(dates),
+				datasets: [{
+					label: 'Attendance',
+					// data: [16.07, 13.07, 11.07],
+					data: JSON.parse(document.getElementById('datevalues').textContent),
+					backgroundColor: [
+						'rgba(255, 99, 132, 0.2)',
+					],
+					borderColor: [
+						'rgba(255, 99, 132, 1)',
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+	</script>
+
+</body>
+
+</html>
