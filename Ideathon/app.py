@@ -560,8 +560,6 @@ def chatbot():
 			{"role": "user", "content": message}
 		]
 		)
-
-		print(response.choices[0])
 		return render_template('chatbot.html', response=response.choices[0].message.content.strip())
 
 # =============================logout============================================================================================
