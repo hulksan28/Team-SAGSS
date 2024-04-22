@@ -500,13 +500,55 @@ th, td {
 }
 
 
+#querydiv h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+#querydiv p {
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+#querydiv input[type="text"] {
+  width: 500px;
+  padding: 10px;
+  margin: 10px 10px;
+  border-radius: 5px;
+  border: 1px solid #222;
+  background-color: rgba(255, 255, 255, 0.103);
+  color: #ddd;
+}
+
+#querydiv input[type="submit"] {
+  left: 100px;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #222;
+  background-color: #222;
+  color: #ddd;
+  cursor: pointer;
+}
+
+textarea {
+  border-radius: 5px;
+  background-color: #666;
+  color: #ddd;
+}
 
 
-/* #glassomorphism{
-  background: rgba(255, 255, 255, 0.103);
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 4px );
--webkit-backdrop-filter: blur( 4px );
-border-radius: 10px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-} */
+
+
+
+.bigbox{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: space-around;
+}
+
+

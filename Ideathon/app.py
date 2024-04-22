@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, request, session
 import flask
 import mysql.connector
 import json
+from better_profanity import profanity
+
 
 app = Flask(__name__)
 app.secret_key = "sasank"
@@ -51,7 +53,30 @@ def home():
 	if request.method == 'GET':
 		if "user" in session:
 			if session.get('user') == 'FOOD_VENDOR':
-				return redirect("/food")
+				return redirect("/food", role = session.get('role'),sessionname = session.get('name'))
+
+			# clear old data
+			mycursor = mydb.cursor()
+			sql = "delete from `locker_mapping` where to_date < curdate()"
+			mycursor.execute(sql)
+			mydb.commit()
+
+			mycursor = mydb.cursor()
+			sql = "delete from `meetings` where date < curdate()"
+			mycursor.execute(sql)
+			mydb.commit()
+
+			mycursor = mydb.cursor()
+			sql = "delete from `sports_mapping` where date < curdate()"
+			mycursor.execute(sql)
+			mydb.commit()
+
+			mycursor = mydb.cursor()
+			sql = "delete from `food_mapping` where date < curdate()"
+			mycursor.execute(sql)
+			mydb.commit()
+
+			# load data to dashboard display
 			mycursor = mydb.cursor()
 			sql = "SELECT * FROM `locker_mapping` where user_id = %s"
 			val = (session.get('user'),)
@@ -87,7 +112,19 @@ def home():
 			arra3 = []
 			for i in arra2:
 				arra3.append((i,arra.count(i),))
-			return render_template("home.html",myresult = myresult,myresult2 = myresult2,myresult3 = arra3)
+			
+			mycursor = mydb.cursor()
+			sql = "SELECT * FROM `sports_mapping` where user_id = %s"
+			val = (session.get('user'),)
+			mycursor.execute(sql,val)
+			myresult4 = mycursor.fetchall()
+
+
+			mycursor = mydb.cursor()
+			sql = "SELECT * FROM `posts` where date(date) >= curdate()"
+			mycursor.execute(sql)
+			myresult5 = mycursor.fetchall()
+			return render_template("home.html",myresult = myresult,myresult2 = myresult2,myresult3 = arra3, myresult4 = myresult4,myresult5 = myresult5,role = session.get('role'),sessionname = session.get('name'))
 		else:
 			return redirect("/login")
 
@@ -99,19 +136,14 @@ def locker():
 		if "user" not in session:
 			return redirect("/login")
 		
-		mycursor = mydb.cursor()
-		sql = "delete from `locker_mapping` where to_date < curdate() - interval 1 day"
-		mycursor.execute(sql)
-		mydb.commit()
-		
-		return render_template("locker.html",err_msg = "")
+		return render_template("locker.html",err_msg = "", role = session.get('role'),sessionname = session.get('name'))
 	if request.method == 'POST':
 		values = request.form.to_dict()
 
 		if datetime.strptime(values["start_date"], '%Y-%m-%d') < datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) or datetime.strptime(values["end_date"], '%Y-%m-%d') < datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
-			return render_template("locker.html",err_msg = "past date not allowed")
+			return render_template("locker.html",err_msg = "past date not allowed", role = session.get('role'),sessionname = session.get('name'))
 		if datetime.strptime(values["start_date"], '%Y-%m-%d') > datetime.strptime(values["end_date"], '%Y-%m-%d'):
-			return render_template("locker.html",err_msg = "start date should be less than end date")
+			return render_template("locker.html",err_msg = "start date should be less than end date", role = session.get('role'),sessionname = session.get('name'))
 		mycursor = mydb.cursor()
 		sql = """SELECT l.locker_no, l.floor
 		FROM lockers l
@@ -185,7 +217,7 @@ def food():
 								count += k[2]
 						arr5.append((i,f,count,))
 			arr5 = list(set(arr5))
-			return render_template("food_vendor.html",food_menu = arr5,food_menu2 = arr3)
+			return render_template("food_vendor.html",food_menu = arr5,food_menu2 = arr3,sessionname = session.get('name'))
 		
 
 
@@ -193,7 +225,7 @@ def food():
 		sql = "SELECT * FROM `foodmenu` where day = dayofweek(curdate()) and isactive = 1"
 		mycursor.execute(sql)
 		food_menu = mycursor.fetchall()
-		return render_template("food.html",food_menu = food_menu)
+		return render_template("food.html",food_menu = food_menu, role = session.get('role'),sessionname = session.get('name'))
 	if request.method == 'POST':
 		values = request.form.to_dict()
 		# {'2': '2', '3': '1', 'total': '280.00'}
@@ -225,7 +257,7 @@ def meeting_room():
 	mycursor.execute(sql)
 	myresult = mycursor.fetchall()
 	if request.method == 'GET':
-		return render_template("meeting_rooms.html", meetings = myresult)
+		return render_template("meeting_rooms.html", meetings = myresult, role = session.get('role'),sessionname = session.get('name'))
 	if request.method == 'POST':
 		floor = request.form['meeting_floor']
 		room = request.form['meeting_room']
@@ -242,33 +274,33 @@ def meeting_room():
 		# Check if booking is for a past date or too far in the future
 		if start_time < datetime.now():
 			meetingroom_status =  "Cannot book for past dates."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 		
 		if start_time > end_time:
 			meetingroom_status = "Start time should be before end time."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 		
 		if start_time > (datetime.now() + timedelta(days=MAX_BOOKING_WINDOW_DAYS)):
 			meetingroom_status = f"Cannot book for dates more than {MAX_BOOKING_WINDOW_DAYS} days in the future."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 		
 
 		# Check if room is available for the requested time slot
 		if not is_time_slot_available(floor, room, start_time, end_time):
 			meetingroom_status = "This room is already booked for the requested time slot. Please choose another time."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 
 		if not is_valid_time_range(start_time, end_time):
 			meetingroom_status = "Invalid time range. Please select a valid time range."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 
 		if not is_within_max_duration(start_time, end_time):
 			meetingroom_status = f"Maximum booking duration is {MAX_DURATION_HOURS} hours. Please select a shorter duration."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 
 		if not is_practical_duration(start_time, end_time):
 			meetingroom_status = f"Minimum practical booking duration is {MIN_BOOKING_DURATION_MINUTES} minutes. Please select a longer duration."
-			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+			return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 
 		
 		# If room is available, book the time slot
@@ -278,7 +310,7 @@ def meeting_room():
 		mycursor.execute(sql,val)
 		mydb.commit()
 		meetingroom_status = "Meeting room booked successfully."
-		return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status)
+		return render_template("meeting_rooms.html", meetings = myresult,meetingroom_status=meetingroom_status, role = session.get('role'),sessionname = session.get('name'))
 
 # Function to check if the requested time slot is available for the given room
 def is_time_slot_available(floor, room, start_time, end_time):
@@ -315,7 +347,7 @@ def recreation():
 	mycursor.execute(sql)
 	myresult = mycursor.fetchall()
 	if request.method == 'GET':
-		return render_template("recreation.html", sports = myresult)
+		return render_template("recreation.html", sports = myresult, role = session.get('role'),sessionname = session.get('name'))
 	if request.method == 'POST':
 		print(request.form.to_dict())
 		start_time_str = request.form['sport_start_time']
@@ -330,15 +362,15 @@ def recreation():
  
 		if start_time < datetime.now():
 			sportbooking_status =  "Cannot book for past time."
-			return render_template("recreation.html", sports = myresult, sportbooking_status=sportbooking_status)
+			return render_template("recreation.html", sports = myresult, sportbooking_status=sportbooking_status, role = session.get('role'),sessionname = session.get('name'))
 				
 		if not is_already_booked(session.get('user')):
 			sportbooking_status = f"Already booking for today. Please come again tomorrow."
-			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
+			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status, role = session.get('role'),sessionname = session.get('name'))
 		
 		if not is_time_slot_available_recreation(start_time, end_time):
 			sportbooking_status = "This slot is already booked for the requested time. Please choose another time."
-			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
+			return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status, role = session.get('role'),sessionname = session.get('name'))
 
 		mycursor = mydb.cursor()
 		sql = "Insert into `sports_mapping` (sport,slot,date,start_time,end_time,user_id) values (%s,%s,%s,%s,%s,%s)"
@@ -346,7 +378,7 @@ def recreation():
 		mycursor.execute(sql,val)
 		mydb.commit()
 		sportbooking_status = "Sport slot booked successfully."
-		return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status)
+		return render_template("recreation.html", sports = myresult,sportbooking_status=sportbooking_status, role = session.get('role'),sessionname = session.get('name'))
 
 # Function to check if the requested time slot is available for the given slot
 def is_time_slot_available_recreation(start_time, end_time):
@@ -437,7 +469,7 @@ def attendance():
 	if request.method == 'GET':
 		arr1,arr2,userids = get_attendence_data()
 		print(arr1,arr2,userids)
-		return render_template("attendance.html",msg = "",arr1 = arr1,arr2 = arr2,userids = userids)
+		return render_template("attendance.html",msg = "",arr1 = arr1,arr2 = arr2,userids = userids, role = session.get('role'),sessionname = session.get('name'))
 	if request.method == 'POST':
 		values = request.form.to_dict()
 		print("=============")
@@ -450,16 +482,16 @@ def attendance():
 			myresult = mycursor.fetchall()
 			if myresult:
 				arr1,arr2,userids = get_attendence_data()
-				return render_template("attendance.html",msg = "Already marked",arr1 = arr1,arr2 = arr2,userids = userids)
+				return render_template("attendance.html",msg = "Already marked",arr1 = arr1,arr2 = arr2,userids = userids, role = session.get('role'),sessionname = session.get('name'))
 			sql = "Insert into `attendance` (user_id,login_time) values (%s,current_timestamp)"
 			val = (session.get('user'),)
 			mycursor.execute(sql,val)
 			mydb.commit()
 			arr1,arr2,userids = get_attendence_data()
-			return render_template("attendance.html",msg = "Marked successfully",arr1 = arr1,arr2 = arr2,userids = userids)
+			return render_template("attendance.html",msg = "Marked successfully",arr1 = arr1,arr2 = arr2,userids = userids, role = session.get('role'),sessionname = session.get('name'))
 		user_name = values['user_name']
 		arr1,arr2,userids = post_attendence_data(user_name)
-		return render_template("attendance.html",msg = "",arr1 = arr1,arr2 = arr2,userids = userids,user_name = user_name)
+		return render_template("attendance.html",msg = "",arr1 = arr1,arr2 = arr2,userids = userids,user_name = user_name, role = session.get('role'),sessionname = session.get('name'))
 
 # =============================queries============================================================================================
 @app.route("/queries", methods = ['POST', 'GET'])
@@ -469,19 +501,16 @@ def queries():
 			return redirect("/login")
 		mycursor = mydb.cursor()
 		
-		queries = "select id,(select adid from `users` u where u.user_id = q.user_id),query,date from `queries` q order by date desc"
+		queries = "select id,(select name from `users` u where u.user_id = q.user_id),query,date from `queries` q order by date desc"
 		mycursor.execute(queries)
 		queries = mycursor.fetchall()
 		query_replies = ''
 
-		query_replies = "select query_id,reply,(select adid from `users` u where u.user_id = q.user_id) from `query_replies` q order by date desc"
+		query_replies = "select query_id,reply,(select name from `users` u where u.user_id = q.user_id) from `query_replies` q order by date desc"
 		mycursor.execute(query_replies)
 		query_replies = mycursor.fetchall()
 
-		# sql = "SELECT id,(select adid from `users` u where u.user_id = q.user_id),query,date FROM `queries` q order by date desc"
-		# mycursor.execute(sql)
-		# myresult = mycursor.fetchall()
-		return render_template("queries.html",queries = queries,query_replies = query_replies,user_id = session.get('user'))
+		return render_template("queries.html",queries = queries,query_replies = query_replies,user_id = session.get('user'), role = session.get('role'),sessionname = session.get('name'))
 	
 	if request.method == 'POST':
 		values = request.form.to_dict()
@@ -491,14 +520,14 @@ def queries():
 			val = (values['query_id'],values['reply'],session.get('user'),)
 			mycursor.execute(sql,val)
 			mydb.commit()
-			return redirect("/queries")
+			return redirect("/queries", role = session.get('role'))
 		
 		mycursor = mydb.cursor()
 		sql = "Insert into `queries` (user_id,query,date) values (%s,%s,current_timestamp)"
 		val = (session.get('user'),values['query'],)
 		mycursor.execute(sql,val)
 		mydb.commit()
-		return redirect("/queries")
+		return redirect("/queries", role = session.get('role'))
 
 # =============================Central repository============================================================================================
 from flask import request
@@ -514,7 +543,7 @@ def centralrepo():
 		mycursor = mydb.cursor()
 		mycursor.execute(sql)
 		myresult = mycursor.fetchall()
-		return render_template("centralrepo.html", files = myresult, role = session.get('role'))
+		return render_template("centralrepo.html", files = myresult, role = session.get('role'),sessionname = session.get('name'))
 		
 	if request.method == 'POST':
 		title = request.form['title']
@@ -533,7 +562,7 @@ def centralrepo():
 		mycursor = mydb.cursor()
 		mycursor.execute(sql,val)
 		mydb.commit()
-		return render_template("centralrepo.html",msg = msg, role = session.get('role'))
+		return render_template("centralrepo.html",msg = msg, role = session.get('role'),sessionname = session.get('name'))
 
 
 # =============================Chatbot============================================================================================
@@ -546,7 +575,7 @@ def chatbot():
 	if request.method == 'GET':
 		if "user" not in session:
 			return redirect("/login")
-		return render_template("chatbot.html")
+		return render_template("chatbot.html", role = session.get('role'),sessionname = session.get('name'))
 	
 	if request.method == 'POST':
 		message = request.form['question'] + " explain in formal way."
@@ -560,7 +589,66 @@ def chatbot():
 			{"role": "user", "content": message}
 		]
 		)
-		return render_template('chatbot.html', response=response.choices[0].message.content.strip())
+		return render_template('chatbot.html', response=response.choices[0].message.content.strip(), role = session.get('role'),sessionname = session.get('name'))
+
+
+# =============================Posts============================================================================================
+@app.route("/posts", methods = ['POST', 'GET'])
+def posts():
+	if request.method == 'GET':
+		if "user" not in session:
+			return redirect("/login")
+		return render_template("posts.html", role = session.get('role'),sessionname = session.get('name'))
+	
+	if request.method == 'POST':
+		values = request.form.to_dict()
+		mycursor = mydb.cursor()
+		sql = "Insert into `posts` (user_id,Topic,content,date) values (%s,%s,%s,%s)"
+		val = (session.get('user'),values['topic'],values['content'],values['todate'])
+		mycursor.execute(sql,val)
+		mydb.commit()
+                        
+		return render_template('posts.html', msg="Posted succesfully" ,role = session.get('role'),sessionname = session.get('name'))
+# =============================anonymous============================================================================================
+@app.route("/anonymous", methods = ['POST', 'GET'])
+def anonymous():
+	mycursor = mydb.cursor()
+	sql = "select user_id,name from `users` where user_id != %s and (role = 'manager' or role = 'HR' or role = 'admin')"
+	val = (session.get('user'),)
+	mycursor.execute(sql,val)
+	users = mycursor.fetchall()
+
+	mycursor = mydb.cursor()
+	sql = "SELECT * FROM `anonymous` where adid = %s order by date desc"
+	val = (session.get('user'),)
+	mycursor.execute(sql,val)
+	anonymousmsg = mycursor.fetchall()
+
+	mycursor = mydb.cursor()
+	sql = "SELECT (select name from `users` where user_id = a.adid),message,date,(select name from `users` where user_id = a.from_msg) FROM `anonymous` a order by date desc"
+	mycursor.execute(sql)
+	allmessages = mycursor.fetchall()
+	to = [i[0] for i in allmessages]
+	to = list(set(to))
+
+
+	if request.method == 'GET':
+		if "user" not in session:
+			return redirect("/login")
+		
+		return render_template("anonymous.html",msg = '', users = users,anonymousmsg = anonymousmsg, role = session.get('role'), allmessages = allmessages, to = to,sessionname = session.get('name'))
+	
+	if request.method == 'POST':
+		values = request.form.to_dict()
+		censored = profanity.censor(values['message']) 
+		mycursor = mydb.cursor()
+		sql = "INSERT into `anonymous` (adid,message,date,from_msg) values (%s,%s,current_timestamp,%s)"
+		val = (values['user'],censored,session.get('user'),)
+		mycursor.execute(sql,val)
+		mydb.commit()
+		return render_template('anonymous.html', msg="Sent succesfully", users = users, anonymousmsg = anonymousmsg ,role = session.get('role'), allmessages = allmessages, to = to,sessionname = session.get('name'))
+
+
 
 # =============================logout============================================================================================
 @app.route("/logout")

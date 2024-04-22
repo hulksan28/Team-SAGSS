@@ -22,11 +22,15 @@
         </ul>
       </li>
       <li><a href="/queries"><i class="fa-brands fa-quora" style="color:red;"></i>ueries</a></li>
-      <li><a href="family.html"><i class="fa-solid fa-people-group" style="color:blue;"></i> Family</a></li>
+      <!-- <li><a href="family.html"><i class="fa-solid fa-people-group" style="color:blue;"></i> Family</a></li> -->
       <li><a href="/attendance"><i class="fa-solid fa-clipboard-user" style="color:green;"></i> Attendance</a></li>
       <li><a href="/centralrepo"><i class="fa-solid fa-book-open-reader" style="color:violet"></i> Central Repo</a></li>
+      {% if role == 'HR' %}
+      <li><a href="/posts"><i class="fa-solid fa-book-open-reader" style="color:rgb(216, 29, 144)"></i> Posts</a></li>
+      {% endif %} 
       <li><a href="/chatbot"><i class="fa-solid fa-book-open-reader" style="color:rgb(29, 194, 216)"></i> ChatBot Glu</a></li>
-	  <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+      <li><a href="/anonymous"><i class="fa-regular fa-face-angry" style="color:rgb(216, 29, 29)"></i></i> Anonymous</a></li>
+	  <li><b>{{sessionname}}</b><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
     </ul>
   </nav>
 

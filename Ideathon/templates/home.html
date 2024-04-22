@@ -23,11 +23,15 @@
         </ul>
       </li>
       <li><a href="/queries"><i class="fa-brands fa-quora" style="color:red;"></i>ueries</a></li>
-      <li><a href="family.html"><i class="fa-solid fa-people-group" style="color:blue;"></i> Family</a></li>
+      <!-- <li><a href="family.html"><i class="fa-solid fa-people-group" style="color:blue;"></i> Family</a></li> -->
       <li><a href="/attendance"><i class="fa-solid fa-clipboard-user" style="color:green;"></i> Attendance</a></li>
       <li><a href="/centralrepo"><i class="fa-solid fa-book-open-reader" style="color:violet"></i> Central Repo</a></li>
+      {% if role == 'HR' %}
+      <li><a href="/posts"><i class="fa-solid fa-book-open-reader" style="color:rgb(216, 29, 144)"></i> Posts</a></li>
+      {% endif %} 
       <li><a href="/chatbot"><i class="fa-solid fa-book-open-reader" style="color:rgb(29, 194, 216)"></i> ChatBot Glu</a></li>
-	  <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+      <li><a href="/anonymous"><i class="fa-regular fa-face-angry" style="color:rgb(216, 29, 29)"></i></i> Anonymous</a></li>
+	  <li><b>{{sessionname}}</b> <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
     </ul>
   </nav>
   <br>
@@ -40,50 +44,63 @@
     
     </div>
   </div>
-  <div class="container mt-3" style="top:20%; left: 5%;">
-    <h1>Active lockers</h1>
+  <div>
+    <div class="container">
+      <h1 style="text-align: center;">EVENTS</h1>
+
+        {% for i in myresult5 %}
+          <h2>EVENT:  {{i[1]}}</h2>
+          <p style="text-align: justify;">Description:  {{i[2]}}</p>
+        {% endfor %}  
+    </div>
+  </div>
+  <div class="bigbox">
+  {% if myresult != [] %}
+  <div class="container2" style="width: 600px;">
+    <h1 style="text-align: center;">Active lockers</h1>
     <table class="table table-dark table-striped">
       <tr>
         <th>Locker No</th>
-        <th>FLOOR</th>
-        <th>from date</th>
-        <th>to date</th>
+        <th>From Date</th>
+        <th>To Date</th>
       </tr>
       {% for i in myresult %}
       <tr>
-        <td>{{i[0]}}</td>
-        <td>{{i[1]}}</td>
-        <td>{{i[2]}}</td>
+        <td>{{i[2]}} - {{i[0]}}</td>
         <td>{{i[3]}}</td>
+        <td>{{i[4]}}</td>
       </tr>
       {% endfor %}
 
     </table>
   </div>
-
-  <div class="container mt-3" style="top:35%; left: 5%;">
-    <h1>Booked Meetings</h1>
+  {% endif %}
+  
+  {% if myresult2 != [] %}
+  <div class="container2" style="width: 600px;">
+    <h1 style="text-align: center;">Booked Meetings</h1>
     <table class="table table-dark table-striped">
       <tr>
         <th>Meeting Room No</th>
-        <th>FLOOR</th>
         <th>Start time</th>
         <th>end time</th>
       </tr>
       {% for i in myresult2 %}
       <tr>
-        <td>{{i[0]}}</td>
-        <td>{{i[1]}}</td>
-        <td>{{i[2]}}</td>
-        <td>{{i[3]}}</td>
+        <td>{{i[2]}} - {{i[0]}}</td>
+        <td>{{i[4]}}</td>
+        <td>{{i[5]}}</td>
       </tr>
       {% endfor %}
 
     </table>
   </div>
+  {% endif %}
 
-  <div class="container mt-3" style="top:50%; left: 5%;">
-    <h1>Booked FOOD</h1>
+
+  {% if myresult3 != [] %}
+  <div class="container2" style="width: 600px;">
+    <h1 style="text-align: center;">Booked Food</h1>
     <table class="table table-dark table-striped">
       <tr>
         <th>Food Item</th>
@@ -98,7 +115,29 @@
 
     </table>
   </div>
+  {% endif %}
   
+  {% if myresult4 != [] %}
+  <div class="container2" style="width: 600px;">
+    <h1 style="text-align: center;">Booked Sports</h1>
+    <table class="table table-dark table-striped">
+      <tr>
+        <th>Sport</th>
+        <th>Start TIme</th>
+        <th>Slot</th>
+      </tr>
+      {% for i in myresult4 %}
+      <tr>
+        <td>{{i[0]}}</td>
+        <td>{{i[2]}}</td>
+        <td>{{i[3]}} mins</td>
+      </tr>
+      {% endfor %}
+
+    </table>
+  </div>
+  {% endif %}
+</div>
 
   <script src="script.js"></script>
 </body>
