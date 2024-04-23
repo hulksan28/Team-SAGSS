@@ -26,7 +26,7 @@ def login():
 		if "user" in session:
 			return redirect("/home")
 		else:
-			return render_template("login.html",err_msg = v_msg)
+			return render_template("login.html",err_msg = '')
 	if request.method == 'POST':
 		values = request.form.to_dict()
 		if values["adid"] == 'FOOD_VENDOR' or values["password"] == 'FOOD_VENDOR':
@@ -45,7 +45,8 @@ def login():
 			return redirect("/home")
 		else:
 			v_msg = "invalid credentials"
-			return redirect("/login")
+			return render_template("login.html",err_msg = v_msg)
+		
 # =============================home============================================================================================
 @app.route("/")
 @app.route("/home", methods = ['POST', 'GET'])
