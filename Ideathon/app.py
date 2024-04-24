@@ -54,7 +54,7 @@ def home():
 	if request.method == 'GET':
 		if "user" in session:
 			if session.get('user') == 'FOOD_VENDOR':
-				return redirect("/food", role = session.get('role'),sessionname = session.get('name'))
+				return redirect("/food")
 
 			# clear old data
 			mycursor = mydb.cursor()
@@ -521,14 +521,14 @@ def queries():
 			val = (values['query_id'],values['reply'],session.get('user'),)
 			mycursor.execute(sql,val)
 			mydb.commit()
-			return redirect("/queries", role = session.get('role'))
+			return redirect("/queries")
 		
 		mycursor = mydb.cursor()
 		sql = "Insert into `queries` (user_id,query,date) values (%s,%s,current_timestamp)"
 		val = (session.get('user'),values['query'],)
 		mycursor.execute(sql,val)
 		mydb.commit()
-		return redirect("/queries", role = session.get('role'))
+		return redirect("/queries")
 
 # =============================Central repository============================================================================================
 from flask import request
@@ -586,7 +586,7 @@ def chatbot():
 		response = client.chat.completions.create(
 		model="gpt-3.5-turbo",
 		messages=[
-			{"role": "system", "content": "You are a high level Bajaj advisor, skilled in explaining all funtional understanding with creative flair."},
+			{"role": "system", "content": "You have all the knowledge of Bajaj Finserv. You know all the public use cases of projects related to Bajaj Finserv or Bajaj Finance. And you need to explain anything using Bajaj Finserv projects. For every response greet with saying 'Hello Bajajian!"},
 			{"role": "user", "content": message}
 		]
 		)
